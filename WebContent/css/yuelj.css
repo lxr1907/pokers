@@ -1,0 +1,45 @@
+@CHARSET "UTF-8";
+
+/*common.css*/
+body,button,input,select,textarea{font:12px/1.5 arial,'Hiragino Sans GB','微软雅黑','宋体',tahoma,Srial,helvetica,sans-serif;-webkit-font-smoothing:antialiased;}
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td,img{font-weight:400;outline:0;border:medium none;margin:0;padding:0;list-style:none;}
+
+input {
+	type: "text"
+}
+
+.roomtype {
+	border: 1px solid #D9D9D9;
+	border-radius: 2px;
+	box-shadow: 0 0 2px 0 #F9F9F9;
+	float: left;
+	width: 158px;
+	margin: 15px 12px 10px 17px;
+	padding-bottom: 10px;
+	text-align: center;
+}
+
+.roomtype h2, .roomtype h1 {
+	border-bottom: 1px solid #D9D9D9;
+	color: #353535;
+	float: left;
+	font-size: 16px;
+	height: 50px;
+	line-height: 50px;
+	position: relative;
+	width: 100%;
+	margin-top: 0px;
+	margin-bottom: 5px;
+}
+
+.roomtype p{
+	text-align: center;
+	height: 25px;
+	line-height: 25px;
+	font-size: 12px;
+	float: left;
+	width: 100%;
+}
+.roomtype div{
+	text-align: center;
+}

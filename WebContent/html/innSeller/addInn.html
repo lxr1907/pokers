@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit">
+<title>新增客栈</title>
+<link rel="stylesheet" type="text/css" href="/fdj/css/easyui.css">
+<link rel="stylesheet" type="text/css" href="/fdj/css/icon.css">
+<link rel="stylesheet" type="text/css" href="/fdj/css/color.css">
+<link rel="stylesheet" type="text/css" href="/fdj/css/uploadify.css">
+<link rel="stylesheet" type="text/css" href="/fdj/css/ui-dialog.css">
+<link rel="stylesheet" type="text/css" href="/fdj/css/addInn.css">
+<link rel="stylesheet" type="text/css" href="/fdj/css/validationEngine.jquery.css">
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.js"></script>
+<script src="/fdj/js/jquery.easyui.min.js"></script>
+<script src="/fdj/js/easyui-lang-zh_CN.js"></script>
+<script src="/fdj/js/yuelj.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=wYqPUGWFGbs2qFIaAmC3uBDl"></script>
+<script type="text/javascript" src="/fdj/js/jquery.cityselect.js"></script> 
+<script src="/fdj/js/dialog-min.js"></script>
+<script src="/fdj/js/jquery.uploadify.js"></script>
+<script type="text/javascript" src="/fdj/js/jquery.dragsort-0.5.2.min.js"></script>
+<script src="/fdj/js/pagejs/addInn/addInn.js"></script>
+<script src="/fdj/js/jquery.validationEngine-zh_CN.js"></script>
+<script src="/fdj/js/jquery.validationEngine.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+  <div class="contentWrap">
+    <ul class="naviList">
+      <li id="innInfo" class="current">基本信息</li>
+      <li id="roomTypeExt">房型信息</li>
+      <li id="roomTypePrice" style="display:none;">优惠券</li>
+    </ul>
+    <ul class="contentList">
+    <!-- 基本信息页面 -->
+      <li class="baseInfoPage">
+        <h2>基本信息将用于与所有第三方卖房网站对接时提供相关资料，请确保基本信息的真实和完整！</h2>
+        <div class="baseInfoContent">
+          <form id="roomInfoForm">
+            
+            <!-- 客栈名称 -->
+            <div class="formDiv">
+              <input type="hidden" name="id" value="">
+              <span class="option">客栈名称：</span>
+              <em id="innName"></em>
+            </div>
+            <div class="formDiv"></div>
+            
+            <!-- 客栈类型 -->
+            <div class="formDiv">
+              <span class="option">客栈类型：</span>
+              <div class="formList">
+                <span id="innTypeShow" class="selectShow">客栈</span>
+                <ul id="innTypeList" style="display: none;">
+                  <li data-value="1">客栈</li>
+                  <li data-value="2">青年旅舍</li>
+                  <li data-value="3">酒店</li>
+                  <li data-value="4">酒店式公寓</li>
+                  <li data-value="5">经济型酒店</li>
+                  <li data-value="6">精品酒店</li>
+                  <li data-value="7">度假酒店</li>
+                  <li data-value="8">短租公寓</li>
+                  <li data-value="9">农家乐</li>
+                </ul>
+                <input type="hidden" name="inntype" value="1">
+              </div>
+              <span class="star">*</span><span class="tip"></span><span class="error" style="display: none;"></span>
+            </div>
+            
+            <!-- 前台电话 -->
+            <div class="formDiv">
+              <span class="option">前台电话：</span>
+              <input type="text" class="validate[required]" name="phone" value="" maxlength="20">
+              <span class="star">*</span>
+              <span id="toService" class="formBtn">完善客服信息
+                <span class="iconPerfectCustomer"></span></span>
+                <span class="error" style="display: none;"></span>
+              </div>
+              <!-- 详细地址 -->
+              <div class="formDiv location">
+                <span class="option">详细地址：</span>
+                <input type="hidden" name="province" value="">
+                <input type="hidden" name="city" value="">
+                <input type="hidden" name="area" value="">
+                <div class="formList">
+                  <div id="city">
+                  <select class="prov"></select>
+                <select class="city" disabled="disabled"></select>
+              <select class="dist" disabled="disabled"></select>
+            	</div></div>
+              <input type="text" id="location" class="validate[required]" name="location" value="">
+              <span class="star">*</span>
+              <span class="formBtn" id="searchMap">搜索标注</span>
+              <span class="error" style="display: none;"></span>
+            </div>
+             <!-- 所属古镇 -->
+            <div class="formDiv" id="town" style="display:none;">
+            	<span class="option">所属古镇：</span>
+				<input type="hidden" name="town" value="" maxlength="20">
+				<select>
+					<option value>请选择..</option>
+					<option value ="1">大研古镇</option>
+					<option value ="2">束河古镇</option>
+				</select>
+				<span class="star">*</span>
+            </div>
+            <!-- 详细地址百度地图 -->
+            <div class="formDiv">
+              <span class="option">详细地址：</span>
+              <div id="allmap"></div>
+              <!-- 保存经纬度 -->
+              <input type="hidden" id="mapLng" name="longitude" value="100.228227">
+              <input type="hidden" id="mapLat" name="latitude" value="26.874707">
+            </div>
+            <!-- 房间数 -->
+            <div class="formDiv">
+              <span class="option">房间数：</span>
+              <input class="validate[required,custom[integer],min[1]]" name="roomcount" type="text" value="">
+              <span class="star">*</span>
+              <span class="tip"></span>
+              <span class="error" style="display: none;"></span>
+            </div>
+            <!-- 可接待人数 -->
+            <div class="formDiv">
+              <span class="option">可接待人数：</span>
+              <input class="validate[required,custom[integer],min[1]]" name="peoplecount" value="" type="text">
+              <span class="star"></span>
+              <span class="tip"></span>
+              <span class="error" style="display: none;"></span>
+            </div>
+            <!-- 客栈简介 -->
+            <div class="formDiv">
+              <span class="option">客栈简介：</span>
+              <textarea id="innIntro" class="validate[required]" name="description" placeholder="内容不超过500字" maxlength="500"></textarea>
+              <span class="star">*</span>
+              <span class="tip">500字以内</span>
+              <span class="error" style="display: none;"></span>
+            </div>
+            <!-- 掌柜介绍 -->
+            <div class="formDiv">
+              <span class="option">掌柜介绍：</span>
+              <div class="innBoss">
+                <div id="bossPic" class="hasCover">
+                	<input type="hidden" name="boss-id" value="">
+                	<img src="" alt="掌柜图片">
+                	<input type="text" id="boss-name" class="validate[required]" name="boss-name" placeholder="掌柜称呼" maxlength="8">
+                	<input type="hidden" name="boss-pic" value="">
+                	<textarea id="boss-desc" class="validate[required]" name="boss-desc" placeholder="掌柜推荐语,内容不超过100字" maxlength="100"></textarea>
+                </div>
+              </div><span class="star">*</span>
+              <label for="sceneryImg" class="boss-pic"><input type="file" name="uploadify" id="upBossPic"></label>
+            </div>
+            <!-- 客栈风光 -->
+            <div class="formDiv">
+              <span class="option">客栈风光：</span>
+              <div class="innScenery">
+                <div id="picShow" class="hasCover">
+                  <img src="" alt="客栈封面">
+                  <input type="hidden" name="pic" value="">
+                  <div class="coverMask"></div>
+                  <p>编辑图片</p>
+                </div>
+                <div id="noScenery" class="noCover" style="display: none;">
+                  <em>+</em>
+                  <p>上传房型图片</p>
+                </div>
+              </div>
+              <span class="star">*</span>
+            </div>
+            <!-- 客栈标签 -->
+            <div class="formDiv">
+              <div class=keyword>
+	              <span class="option">客栈标签：</span>
+	              <input type="text" name="keyword" value="" maxlength="8" placeholder="标签1">
+	              <input type="text" name="keyword" value="" maxlength="8" placeholder="标签2">
+	              <input type="text" name="keyword" value="" maxlength="8" placeholder="标签3">
+	              <span class="tip">最多添加三个标签，每个标签不超过八个汉字</span>
+              </div>
+            </div>
+            
+            <!-- 客栈设施 -->
+            <div class="formDiv">
+              <span class="option">客栈设施：</span>
+              <div class="checkList">
+                
+              </div>
+            </div>
+            <!-- 完善客服信息弹窗 -->
+            <div id="dialogSercive" class="ui-popups" style="display: none;">
+              <div class="ui-popups-backdrop"></div>
+              <div class="ui-popups-dialog">
+                <em class="close" data-dismiss="popups">x</em>
+                <div class="ui-popups-head">
+                  <h3 class="ui-popups-title">客服信息</h3>
+                </div>
+                <div class="ui-popups-body">
+                  <div class="formrow"><span class="option">客服昵称：</span><input type="text" name="servicename" value=""></div>
+                  <div class="formrow"><span class="option">客服电话：</span><input type="text" name="servicephone" value=""></div>
+                  <div class="formrow"><span class="option">客服QQ：</span><input type="text" name="serviceqq" value=""></div>
+                  <div class="formrow"><span class="option">客服微信：</span><input type="text" name="servicewechart" value=""></div>
+                  <div class="formrow"><span class="option">公共号：</span><input type="text" name="commonwechart" value=""></div>
+                  <div class="formrow"><span class="option">官方微博：</span><input type="text" name="weibo" value=""></div>
+                </div>
+                <div class="ui-popups-foot">
+                  <span id="saveServiceBtn" class="dialogBtn">确定</span>
+                  <span class="error" style="display: none;"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 保存按钮 -->
+            <p class="baseInfoFooter">
+              <span id="saveBaseInfoBtn">保存</span>
+              <button id="queryBaseInfoBtn" type="button" style="display:none;">查询</button>
+            </p>
+            <!-- 表单结束 -->
+          </form>
+        </div>
+         <!-- 上传图片弹窗 -->
+         <div id="showAllPic" class="ui-popups" style="display: none;">
+         	<div class="ui-popups-backdrop"></div>
+              <div class="ui-popups-dialog">
+                <em class="close">x</em>
+                <div class="ui-popups-head">
+                  <h3 class="ui-popups-title">客栈风光</h3>
+                </div>
+                <div class="ui-popups-body">
+                  <p class="imgOrder">
+                  	<span>直接拖动图片可调整顺序</span>
+                  	<span class="saveOrder" onclick="saveOrder(this,'inn')">保存排序</span>
+                  	<span class="changeOrder" onclick="changeOrder(this,'inn')">图片排序</span>
+                  </p>
+                  <ul class="imgBoxList" id="sceneryUlBox"></ul> 
+				  <div class="plusImg" id="sceneryToCut" >
+                      <label for="sceneryImg" class="imgBox"><input type="file" name="uploadify" id="uploadify"></label>
+                      <span class="loading" style="display:none;">图片上传中...</span>
+                      <span class="loadComplete" style="display:none;">图片上传完成</span>
+                  </div>
+                </div>
+                <div class="ui-popups-foot">
+                  <p>图片最大不超过2M，推荐图片尺寸 640：450 ; 请保证图片无水印、高质量、合法性。</p>
+                </div>
+              </div>
+          </div>
+      </li>
+      
+      <!-- 房型信息页面 -->
+      <li class="roomTypePage" style="display: list-item;">
+        <h2>房型信息将用于与所有第三方卖房网站对接时提供相关资料，请确保房型信息的真实和完整！</h2>
+        <div class="roomTypeContent ">
+          <p><span id="createRoomType" style="visibility:hidden;"><em>+</em>新建房型</span></p>
+          <div class="noRoomShow">
+            <div>
+              <p>您还没有房型</p>
+              <p>请新建分销房型，并完善房型配置和图片！</p>
+            </div>
+            <div class="noRoomImg"></div>
+          </div>
+          <ul class="roomInfoList"></ul>
+          </div>
+      </li>
+      
+      <!-- 优惠券页面 -->
+      <li class="couponPage" style="display: list-item;">
+        <h2>* 只有支付方式设置为预付全款时才可使用优惠券。</h2>
+        <div class="couponContent">
+          <p><span id="newCoupon"><em>+</em>新增优惠券</span></p>
+          <ul class="couponList"></ul>
+        </div>
+      </li>
+      
+      </ul>
+        
+        <!-- 编辑房型弹窗 -->
+        <div id="dialoAddRoomType" class="ui-popups">
+          <div class="ui-popups-backdrop"></div>
+          <div class="ui-popups-dialog">
+            <em class="close" data-dismiss="popups">x</em>
+            <div class="ui-popups-head">
+              <h3 class="ui-popups-title">编辑房型信息</h3>
+            </div>
+            <div class="ui-popups-body">
+              <form id="updateRoomTypeForm">
+              	<div class="idList">
+              		<input type="hidden" name="id" value="">
+              		<input type="hidden" name="roomextid" value="">
+              		<input type="hidden" name="roomtypeid" value="">
+              	</div>
+                <div class="formrow"><span class="option">房型名称：</span><input id="roomName" name="name" type="text" maxlength="10"><span class="tip">不可修改</span></div>
+                <div class="formrow"><span class="option">楼层：</span><input class="validate[required]" name="floor" type="text" maxlength="4"><span class="tip">层</span></div>
+                <div class="formrow"><span class="option">房间面积：</span><input class="validate[required]" name="roomarea" type="text" maxlength="4"><span class="tip">m²</span></div>
+                <div class="formrow"><span class="option">床数量：</span><input class="validate[required]" name="bedcount" type="text" maxlength="4"><span class="tip">张床</span><span class="star">*</span></div>
+                <div class="formrow"><span class="option">床规格：</span><input class="validate[required]" name="bedlength" type="text" maxlength="4"><span class="tip">cm</span><span class="xx">x</span><input class="validate[required]" name="bedwidth" type="text" maxlength="4"><span class="tip">cm</span><span class="star">*</span></div>
+                <div class="formrow">
+                  <span class="option">房型设施：</span>
+                  <div id="RoomFaciCheck"></div>
+                  <span id="starSpecial1" class="star">*</span>
+                </div>
+                <div class="formrow">
+                  <span class="option">房型简介：</span>
+                  <textarea name="description" id="RoomTypeIntro" maxlength="200" placeholder="不超过200字"></textarea>
+                  <span id="starSpecial2" class="star">*</span>
+                </div>
+              </form>
+            </div>
+            <div class="ui-popups-foot">
+              <span id="saveNewRoomBtn" class="dialogBtn">保存</span>
+              <span class="error" style="display: none;"></span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 房型图片编辑弹窗 -->
+        <div id="roomTypeImg" class="ui-popups">
+          <div class="ui-popups-backdrop"></div>
+          <div class="ui-popups-dialog">
+            <em class="close">x</em>
+            <div class="ui-popups-head">
+              <h3 class="ui-popups-title">房型图片</h3>
+            </div>
+            <div class="ui-popups-body">
+              <input type="hidden" name="rank" value="-1">
+              <p class="imgOrder">
+                  	<span>直接拖动图片可调整顺序</span>
+                  	<span class="saveOrder" onclick="saveOrder(this,'roomtype')">保存排序</span>
+                  	<span class="changeOrder" onclick="changeOrder(this,'roomtype')">图片排序</span>
+                  </p>
+              <ul class="imgBoxList" id="roomTypeImgUlBox"></ul>
+              <div class="plusImg" id="roomTypeToCutPic">
+              	<label for="sceneryImg" class="imgBox">
+                  <input type="file" name="uploadify" id="uploadifyRoom">
+                </label>
+                <span class="loading" style="display:none;">图片上传中...</span>
+                <span class="loadComplete" style="display:none;">图片上传完成</span>
+              </div>
+            </div>
+            <div class="ui-popups-foot">
+              <p>房型图片最大不超过2M，推荐图片尺寸 640：400 ; 请保证图片无水印、高质量、合法性。</p>
+            </div>
+          </div>
+        </div>
+        <!-- 新建优惠券弹窗 -->
+		<div id="dialogCoupon" class="ui-popups">
+		  <div class="ui-popups-backdrop"></div>
+		  <div class="ui-popups-dialog">
+		    <em class="close" data-dismiss="popups">x</em>
+		    <div class="ui-popups-head">
+		      <h3 class="ui-popups-title">新增优惠券</h3>
+		    </div>
+		    <div class="ui-popups-body">
+		      <div class="formrow">
+		      	<span class="option">额度：</span>
+		        <select id="newcouSelect">
+		          <option value="discount">打折</option>
+		          <option value="coupon">立减</option>
+		        </select>
+		        <input type="text" name="discount" value="">
+		        <input type="text" name="discount" value="">
+		        <span class="tip">如：8.5折</span>
+		      </div>
+		      <div class="formrow">
+		      	<span class="option">券号：</span>
+		        <input type="text" name="servicephone" value="">
+		      </div>
+		      <div class="formrow">
+		      	<span class="option">类型：</span>
+		        <label title="可重复使用"><input name="coupontime" type="radio" checked="checked" value="forever"> 可重复使用</label>
+		        <label title="只能使用一次"><input name="coupontime" type="radio" value="temp"> 只能使用一次 </label>
+		      </div>
+		      <div class="formrow">
+		      	<span class="option">有效期：</span>
+		        <span class="mydatebox">
+				<input id="starttime" type="text" class="easyui-datebox"><span>&nbsp;至&nbsp; </span><input id="endtime" type="text" class="easyui-datebox" />
+			</span>
+		      </div>
+		      <div class="formrow">
+		      	<span class="option">周末：</span>
+		        <input type="text" name="commonwechart" value="">
+		      </div>
+		      <div class="formrow">
+		      	<span class="option">全星期：</span>
+		        <input type="text" name="weibo" value="">
+		      </div>
+		    </div>
+		    <div class="ui-popups-foot">
+		      <span id="saveServiceBtn" class="dialogBtn">确定</span>
+		      <span class="error" style="display: none;"></span>
+		    </div>
+		  </div>
+		</div>
+  </div>
+</div>
+
+</body>
+</html>

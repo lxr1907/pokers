@@ -1,0 +1,11 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td,span,input{ margin:0; padding:0;}
+body{ font-family: Arial,"Hiragino Sans GB","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif; font-weight: 100;}
+ul{ list-style-type:none;}
+a{ outline:none; blr:expression(this.onFocus=this.blur()); text-decoration:none;}
+img{ border:none;width: 100%}
+table{ border-collapse:collapse;}
+.main {
+    width: 6.4rem;
+    margin: 0 auto;
+    position: relative;
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Texas Hold’em poker</title>
+    <meta charset="utf-8">
+</head>
+<body>
+<div id="canvasDiv"></div>
+<div id="registDiv">
+    <input id="name" type="text" style="border:2px solid groove;position:absolute;left:400px;top:140px;opacity:.5"/>
+    <input id="password" type="text" style="border:2px solid groove;position:absolute;left:400px;top:200px;opacity:.5"/>
+</div>
+<div id="roomDiv"></div>
+<div id="messages"></div>
+<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+<script src="texasJS/view.js"></script>
+<script src="texasJS/message.js"></script>
+<script src="texasJS/controll.js"></script>
+<script src="texasJS/slipbar.js"></script>
+<script src="texasJS/music.js"></script>
+<script src="texasJS/poker.min.js"></script>
+<script src="texasJS/drawCards.js"></script>
+<script src="texasJS/fullscreen.js"></script>
+<!--<script src="texasJS/facebook.js"></script>-->
+<script>
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        //初始化websocket连接
+        wsInit();
+        $.texasMusic.initMusic();
+        var canvas = document.createElement("canvas");
+        texasCanvas = canvas;
+        var ctx = canvas.getContext("2d");
+        canvas.width = 1000 //1316;
+        canvas.height = 530//680;
+        canvas.id = "texasCanvas";
+        $(canvas).appendTo("#canvasDiv");
+        texasContext = canvas.getContext("2d");
+
+        // 游戏主函数
+        var then = Date.now();
+        var main = function () {
+            var now = Date.now();
+            var delta = now - then;
+            //传入时间差
+            update(delta / 1000);
+            render();
+            then = now;
+            // 立即调用主函数
+            requestAnimationFrame(main);
+        };
+        // 画出所有物体
+        var render = function () {
+            //画背景图
+            drawBackground();
+            if (gamebackGroundType == "room" && backGroundLoaded && chipsImage.complete) {
+                //玩家头像
+                drawPlayersPhoto(screenWidth, screenHeight);
+                //玩家信息
+                drawPlayerInfos();
+                //玩家手牌或牌背
+                drawCards();
+                //玩家下注
+                drawBetChips();
+                //玩牌控制按钮
+                drawControllButtons();
+                //公共牌
+                drawCommonCards();
+                //奖池
+                drawPotChips();
+                //画倒计时条
+                drawTimeBar();
+                DrawSlipBar.init();
+            }
+        };
+        // 更新游戏对象的属性
+        var update = function (modifier) {
+            //时间*速度=距离
+            updateTimeBar(modifier);
+        };
+        main();
+    });
+    function buyChips(){
+        window.open("buyChips.html");
+    }
+</script>
+<div>
+    <!--<div-->
+    <!--class="fb-like"-->
+    <!--data-share="true"-->
+    <!--data-width="450"-->
+    <!--data-show-faces="true">-->
+    <!--</div>-->
+    <!--<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">-->
+    <!--</fb:login-button>-->
+
+    <!--<div id="status">-->
+    <!--</div>-->
+    <button id="buy" style="border:2px solid groove;position:absolute;left:400px;top:10px;opacity:.5" onclick="buyChips()">buyChips</button>
+</div>
+</body>
+</html>

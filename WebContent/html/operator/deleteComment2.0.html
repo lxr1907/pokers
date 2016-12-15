@@ -1,0 +1,563 @@
+<html>
+<head>
+    <link rel="stylesheet" href="/fdj/css/easyui.css"/>
+    <!DOCTYPE html>
+    <meta charset="UTF-8">
+    <title>现货数据</title>
+    <link rel="stylesheet" type="text/css" href="/fdj/css/my_easyui.css">
+    <link rel="stylesheet" type="text/css" href="/fdj/css/icon.css">
+    <link rel="stylesheet" href="/fdj/css/ui-dialog.css">
+    <link rel="stylesheet" href="/fdj/css/bootstrap.css"/>
+    <style>
+        @CHARSET "UTF-8";
+        /*common.css*/
+        body,button,input,select,textarea{font:12px/1.5 arial,'Hiragino Sans GB','微软雅黑','宋体',tahoma,Srial,helvetica,sans-serif;-webkit-font-smoothing:antialiased;}
+        body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td,img{font-weight:400;outline:0;border:medium none;margin:0;padding:0;list-style:none;}
+    </style>
+    <style type="text/css">
+        #fm
+        {
+            margin: 0;
+            padding: 10px 30px;
+        }
+        .ftitle
+        {
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .fitem
+        {
+            margin-bottom: 5px;
+        }
+        .fitem label
+        {
+            display: inline-block;
+            width: 80px;
+        }
+        #fm input{
+            line-height:26px;
+            border:1px solid #ccc  ;
+        }
+    </style>
+</head>
+<body>
+<nav class="nav navbar-default  " role="navigation" style=" margin-bottom: 0px;">
+    <div>
+        <ul class="nav navbar-nav" id="nav-header">
+            <li class="dropdown type-1">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    普通交流圈 <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="selectAll"><a href="#">查看全部</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li class="selectNotDeleted"><a href="#">未删除</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li class="selectDeleted"><a href="#">已删除</a></li>
+                </ul>
+            </li>
+            <!--<li class="dropdown type-2">-->
+                <!--<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">-->
+                    <!--策略圈 <span class="caret"></span>-->
+                <!--</a>-->
+                <!--<ul class="dropdown-menu">-->
+                    <!--<li class="selectAll"><a href="#">查看全部</a></li>-->
+                    <!--<li role="separator" class="divider"></li>-->
+                    <!--<li class="selectNotDeleted"><a href="#">未删除</a></li>-->
+                    <!--<li role="separator" class="divider"></li>-->
+                    <!--<li class="selectDeleted"><a href="#">已删除</a></li>-->
+                <!--</ul>-->
+            <!--</li>-->
+        </ul>
+        <!--<button class="btn btn-danger" id="shuoming" style=" display: block;   margin: 7px 0 0 190px;">操作说明</button>-->
+    </div>
+</nav>
+<div class="alert alert-warning alert-dismissible" id="alert" role="alert" style=" display: block;">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true" style="color:red;">&times;</span></button>
+    <h3 style="color: #080808">使用说明</h3>
+    <p>1.页面加载后默认为加载交流圈全部内容</p>
+    <p>2.左上角交流圈，点击可选择全部、已删除、未删除。一旦点击选择后此后操作都是在此前提下完成。</p>
+    <p>3.筛选分为3块，可通过关键词、发帖人、时间范围进行查找。选择时间范围时可通过年月日时分秒进行筛选，选完后“点击确定！！！”完成选择 <br/>筛选条件选择完后点击查找出现结果</p>
+    <p>4.需要清空筛选条件时，点击返回所有数据即可</p>
+    <p>5.数据列表左边为单选框，可点击进行选择操作。左上角选框为全选，点击后选择当前页面的所有数据，可进行批量操作</p>
+    <p>6.由于无真实数据，采用模拟数据。暂时没有修改样式仅实现功能部分，后期会添加样式。</p>
+    <p>7.该网页适用于屏幕宽度为1440以上设备，低于该宽度可能出现横向滚动轴。</p>
+    <p>点击该区域右上角关闭说明</p>
+</div>
+<div id="div-content" style="padding:10px;    ">
+    <div id="tb" style="padding:3px">
+        <span>关键词：</span>
+        <input id="s-code" style="line-height:26px;border:1px solid #ccc">
+        <span>发帖人：</span>
+        <input id="name" style="line-height:26px;border:1px solid #ccc">
+        <!--<input id="dd" type="text" class="easyui-datebox" required="required">-->
+        <span>起始期</span>
+        <input class="easyui-datetimebox" name="birthday"  id="dd-1"
+               data-options="required:true,showSeconds:true" value="3/4/2010 00:00" style="width:150px">
+        <span>截止期</span>
+        <input class="easyui-datetimebox" name="birthday"  id="dd-2"
+               data-options="required:true,showSeconds:true" value="3/4/2010 24:00" style="width:150px">
+        <a href="#" class="btn btn-success" data-options="iconCls:'icon-search'" onclick="onsearchh()">查找</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="updateData()" style="margin-left: 180px">返回所有数据</a>
+    </div>
+    <div id="toolbar">
+        <a href="javascript:void(0)" class="btn btn-primary" onclick=" destroyUser()"  plain="true">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 删除</a>
+        <a href="javascript:void(0)" class="btn btn-primary" onclick="addUser()" plain="true">
+            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 恢复</a>
+        <a href="javascript:void(0)" class="btn btn-primary" onclick=" onBottom()" style="float: right;" plain="true">
+            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span> 取消置顶</a>
+        <a href="javascript:void(0)" class="btn btn-primary" onclick="onTop()" style="float: right;" plain="true">
+            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> 置顶</a>
+    </div>
+    <table id="dg" class="easyui-datagrid" rownumbers="true"></table>
+</div>
+
+<div id="dlg" class="easyui-dialog" style="width: 400px; height: 380px; padding: 10px 20px;"
+     closed="false" buttons="#dlg-buttons" modal="true" >
+    <div class="ftitle">
+        信息编辑
+    </div>
+    <form id="fm" method="post">
+        <div class="fitem">
+            <label>
+                id
+            </label>
+            <input name="id" class="easyui-validatebox" data-options="required:true,validType:'length[1,320]'" disabled="true"/>
+        </div>
+        <div class="fitem">
+            <label>
+                code</label>
+            <input name="code" class="easyui-validatebox" data-options="required:true,validType:'length[1,320]'"disabled="true" />
+        </div>
+        <div class="fitem">
+            <label>
+                status</label>
+            <input name="status" class="easyui-validatebox"  data-options="required:true,validType:'length[1,320]'" disabled="true"/>
+        </div>
+        <div class="fitem">
+            <label>
+                name</label>
+            <input name="name" class="easyui-validatebox"  data-options="required:true,validType:'length[1,320]'"  />
+        </div>
+        <div class="fitem">
+            <label>
+                typeid</label>
+            <select name="" id="select-v">
+                <option value="1">1.国际</option>
+                <option value="2">2.银行</option>
+                <option value="3">3.天交所</option>
+                <option value="4">4.上交所</option>
+                <option value="0">0.其它</option>
+            </select>
+        </div>
+        <input type="hidden" name="action" id="hidtype" />
+        <input type="hidden" name="ID" id="Nameid" />
+    </form>
+</div>
+<div id="dlg-buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="saveUser()" iconcls="icon-save">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#dlg').dialog('close')"
+       iconcls="icon-cancel">取消</a>
+</div>
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.js"></script>
+<script src="/fdj/js/jquery.easyui.min.js"></script>
+<script src="/fdj/js/easyui-lang-zh_CN.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+<script src="/fdj/js/dialog-min.js"></script>
+<script src="/fdj/js/yuelj.js"></script>
+<script type="text/javascript">
+    //分页参数
+    var pageJson = {
+        pageNum : 1,
+        pageSize : 20,
+        totalCount : 0
+    };
+    //传入后台查询用户的参数
+    var entityJson = {
+    };
+    var postData ={};
+//    $('#shuoming').click(function () {
+//        $('#alert').css('display','block')
+//    })
+    $(function(){
+        $("#dlg").dialog("close");
+        $("#tb input").val("")
+        onsearchh();
+        //选择type为的评论区
+        $('.type-1').click(function () {
+            entityJson.type=1;
+            // commentLoad();
+        });
+        //选择type为1的评论区
+        $('.type-2').click(function () {
+            entityJson.type=2;
+            // commentLoad();
+        });
+        //选择全部评论
+        $('.selectAll').click(function () {
+            delete entityJson.status;
+            onsearchh();
+        });
+        //选择未删除评论
+        $('.selectNotDeleted').click(function () {
+            entityJson.status=1;
+            onsearchh();
+        });
+        //选择已删除评论
+        $('.selectDeleted').click(function () {
+            entityJson.status=0;
+            onsearchh();
+        });
+    });
+    function onTop(){
+        entityJson.ontop=1;
+        var row = $("#dg").datagrid("getSelected");
+        if (row) {
+            entityJson.id=row.id;
+            postData.entityJson=JSON.stringify(entityJson);
+            postData.pageJson=JSON.stringify(pageJson);
+            $.messager.confirm('Confirm', '确定置顶?', function(r) {
+                if (r) {
+                    $.ajax({
+                        url: "/fdj/operator/updateMicroblog.action",
+                        data: postData,
+                        success: function (returnData) {
+                            if (returnData === null || returnData.message === null || returnData.state === 0) {
+                                console.log('无数据')
+                            } else {
+                                $.messager.alert('警告',returnData.message);
+                                //entityJson = {};
+                               // postData ={};
+                                // dataNotDelete()
+                                delete  entityJson.id;
+                                //entityJson.ontop
+                                onsearchh();
+                            }
+                        },
+                    })
+                }
+            });
+        }
+        delete entityJson.ontop;
+    }
+    //添加置顶
+    function onTop(){
+        entityJson.ontop=1;
+        var row = $("#dg").datagrid("getSelected");
+        if (row) {
+            entityJson.id=row.id;
+            postData.entityJson=JSON.stringify(entityJson);
+            postData.pageJson=JSON.stringify(pageJson);
+            $.messager.confirm('Confirm', '确定置顶?', function(r) {
+                if (r) {
+                    $.ajax({
+                        url: "/fdj/operator/updateMicroblog.action",
+                        data: postData,
+                        success: function (returnData) {
+                            if (returnData === null || returnData.message === null || returnData.state === 0) {
+                                console.log('无数据')
+                            } else {
+                                $.messager.alert('警告',returnData.message);
+                                //entityJson = {};
+                                // postData ={};
+                                // dataNotDelete()
+                                delete  entityJson.id;
+                                //entityJson.ontop
+                                onsearchh();
+                            }
+                        },
+                    })
+                }
+            });
+        }
+        delete entityJson.ontop;
+    }
+    //取消置顶
+    function onBottom(){
+        entityJson.ontop=0;
+        var row = $("#dg").datagrid("getSelected");
+        if (row) {
+            entityJson.id=row.id;
+            postData.entityJson=JSON.stringify(entityJson);
+            postData.pageJson=JSON.stringify(pageJson);
+            $.messager.confirm('Confirm', '确定置顶?', function(r) {
+                if (r) {
+                    $.ajax({
+                        url: "/fdj/operator/updateMicroblog.action",
+                        data: postData,
+                        success: function (returnData) {
+                            if (returnData === null || returnData.message === null || returnData.state === 0) {
+                                console.log('无数据')
+                            } else {
+                                $.messager.alert('警告',returnData.message);
+                                //entityJson = {};
+                                // postData ={};
+                                // dataNotDelete()
+                                delete  entityJson.id;
+                                //entityJson.ontop
+                                onsearchh();
+                            }
+                        },
+                    })
+                }
+            });
+        }
+        delete entityJson.ontop;
+    }
+    function onsearchh(){
+        //选择日期
+        //$('#dd-1').datebox('getValue')="1";
+       // var c = $('#dd-1').datebox('getValue');
+        console.log($('#dd-1').datebox('getValue'))
+        //传入后台查询用户的参数
+        $('#s-code').val()!=''&&(entityJson.text= $('#s-code').val()) ;
+        $('#name').val()!=''&&(entityJson.uname= $('#name').val()) ;
+        $('#dd-1').datebox('getValue')!=''&&(entityJson.senddateBegin= $('#dd-1').datebox('getValue')) ;
+        $('#dd-2').datebox('getValue')!=''&&(entityJson.senddateEnd= $('#dd-2').datebox('getValue')) ;
+        //阐述json化
+        postData.pageJson = JSON.stringify(pageJson);
+        postData.entityJson = JSON.stringify(entityJson);
+
+        $('#dg').datagrid({
+            loadMsg : '数据加载中,请稍后...',
+            singleSelect : false,
+            nowrap:false,
+            height : 600,
+            pagination : true,
+            pageList : [ 20, 40, 80 ],
+            pageSize : 20,
+            title:'发帖信息审核',
+            columns : [ [ {
+                field : 'checkbox',
+                checkbox:true
+            },{
+                field : 'text',
+                title : '内容',
+                width:700,
+                align : 'center'
+            },{
+                field : 'img',
+                title : '图片',
+                width:200,
+                align : 'center'
+            },{
+                field : 'uname',
+                title : '作者',
+                width : 100,
+                align : 'center'
+            },{
+                field : 'senddate',
+                title : '发帖日期',
+                width : 100,
+                align : 'center',
+                editor:'text'
+            },{
+                field : 'statusText',
+                title : '状态',
+                width : 50,
+                align : 'center',
+                editor:'text'
+            }] ] ,
+            //可编辑表格
+            iconCls:'icon-edit',
+            idField:'id',
+        });
+        loadDataGrid();
+
+        var from = 0;
+        var to = 0;
+        //加载分页条
+        function initPagination() {
+            $('#dg').datagrid("getPager").pagination({
+                total : pageJson.totalCount,
+                pageSize : pageJson.pageSize,
+                pageNumber : parseInt(pageJson.pageNum),
+                onSelectPage : function(pageNum, pageSize) {
+                    $(this).pagination('loading');
+                    pageJson.pageSize = pageSize;
+                    pageJson.pageNum = pageNum;
+                    postData.pageJson = JSON.stringify(pageJson);
+
+                    loadDataGrid();
+                    $(this).pagination('loaded');
+                },
+                displayMsg : '当前显示' + from + "到" + to + '条记录   共'
+                + pageJson.totalCount + ' 条记录'
+            });
+            pageJson.pageNum=1;
+            delete entityJson.text;
+            delete entityJson.uname;
+            delete entityJson.senddateBegin;
+            delete entityJson.senddateEnd;
+
+        }
+        //加载评论列表
+        function loadDataGrid() {
+            //0未审核，1有效，2审核不通过
+            $.ajax({
+                url : "/fdj/selectMicroblog.action",
+                data : postData,
+                success : function(returnData) {
+                    if (returnData == null || returnData.list == null) {
+                        alert('获取失败!');
+                    } else {
+                        //根据接收的数据添加不同的属性
+                        for( var key in returnData.list){
+                            returnData.list[key].status === "1"&&(returnData.list[key].statusText = "正常");
+                            returnData.list[key].status === "0"&&(returnData.list[key].statusText = "已删除");
+                            (returnData.list[key].pic!=null&&returnData.list[key].pic!="0")&&(returnData.list[key].img="<img src='"+ $.yuelj.imageurlPre+returnData.list[key].pic+"'/>");
+                        } ;
+                        $('#dg').datagrid("loadData", {
+                            "rows" : returnData.list
+                        });
+
+                        /*if (returnData.list.length != 0) {
+                            $('#dg').datagrid("selectRow", 0);
+                        } */
+                        pageJson.totalCount = returnData.page.totalCount;
+                        returnData.page.totalCount == 0 ? from = 0 : from = returnData.page.ifrom + 1;
+                        to = pageJson.pageSize * pageJson.pageNum;
+                        if (to > pageJson.totalCount) {
+                            to = pageJson.totalCount;
+                        }
+                        pageJson.pageSize = returnData.page.pageSize;
+                        pageJson.pageNum = returnData.page.pageNum;
+                        //默认清除全部被选中的选项
+                        $('#dg').datagrid('unselectAll');
+                        initPagination();
+                    }
+                }
+            });
+        }
+    }
+    $('.easyui-linkbutton').click(function(){
+        onsearchh();
+    })
+    //编辑当前选中行
+    function editUser() {
+        var row = $("#dg").datagrid("getSelected");
+        if (row) {
+            $("#dlg").dialog("open").dialog('setTitle', '编辑当前行');
+            $("#fm").form("load", row);
+            console.log(row.typeid);
+            $("#select-v option[value='"+row.typeid+"']").attr('selected','selected');
+        }
+    }
+    //删除当前选中行
+    function destroyUser() {
+        var row = $("#dg").datagrid("getSelections");
+        var i = 0;
+        var string = "";
+        for(i;i<row.length;i++){
+            string += row[i].id;
+            if(i < row.length-1){
+                string += ',';
+            }else{
+                break;
+            }
+        }
+        if (row.length== 0) {
+            alert("请选择要删除的行");
+        }
+        if (row.length>0) {
+            $.messager.confirm('Confirm', '确定删除用户?', function(r) {
+                if (r) {
+                    $.ajax({
+                        url: "/fdj/operator/deleteMicroblog.action",
+                        data: 'ids='+string,
+                        success: function (returnData) {
+                            if (returnData === null || returnData.message === null || returnData.state === 0) {
+                                console.log('无数据')
+                            } else {
+                                $.messager.alert('警告',returnData.message);
+                                entityJson = {
+                                };
+                                postData ={};
+                               // dataNotDelete()
+                                onsearchh();
+                            }
+                        },
+                    })
+                }
+            });
+        }
+    }
+    //上架选中项
+    function addUser() {
+        var row = $("#dg").datagrid("getSelections");
+        var i = 0;
+        var string = "";
+        for(i;i<row.length;i++){
+            string += row[i].id;
+            if(i < row.length-1){
+                string += ',';
+            }else{
+                break;
+            }
+        }
+        if (row.length== 0) {
+            alert("请选择要上架的行");
+        }
+        if (row.length>0) {
+            $.messager.confirm('Confirm', '确定上架?', function(r) {
+                if (r) {
+                    $.ajax({url: "/fdj/operator/upMicroblog.action",
+                        data: 'ids='+string,
+                        success: function (returnData) {
+                            if (returnData === null || returnData.message === null || returnData.state === 0) {
+                                console.log('无数据')
+                            } else {
+                                // alert(returnData.message);
+                                $.messager.alert('警告',returnData.message);
+                                entityJson = {
+                                };
+                                postData ={};
+                                onsearchh();
+                                //dataDelete();
+                            }
+                        },
+                        //error:function(){$.messager.alert('警告','请重新登录')}
+                    })
+                }
+            });
+        }
+    }
+    //保存变编辑信息
+    function saveUser() {
+        var entityJson = {
+        };
+        var postData ={};
+        entityJson.id = $("#dg").datagrid("getSelected").id;
+        entityJson.code = $("input[name='code']").val();
+        entityJson.name = $("input[name='name']").val();
+        entityJson.status = $("input[name='status']").val();
+        entityJson.typeid = $("#select-v option:selected").val();
+        postData.entityJson = JSON.stringify(entityJson);
+        $("#dlg").dialog("close");
+        console.log(JSON.stringify(entityJson))
+        $.ajax({
+            url: "/fdj/operator/updateMicroblog.action",
+            data: postData,
+            success: function (returnData) {
+                if (returnData == null || returnData.message == null) {
+                    $.messager.alert('警告',returnData.message)
+                } else {
+                    $.messager.alert('警告',returnData.message)
+                    onsearchh()   ;
+                }
+            }
+            //error: function () {$.messager.alert('警告','响应失败请重新登录')}
+        })
+    }
+    //返回所有数据
+    function updateData(){
+        $('#tb input').val("");
+        onsearchh()
+    }
+</script>
+</body>
+</html>

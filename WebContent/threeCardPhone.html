@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>宝鸡拼三张</title>
+    <meta charset="utf-8">
+</head>
+<body>
+<div id="canvasDiv"></div>
+<div id="registDiv">
+    <input id="name" type="text" style="border:2px solid groove;position:absolute;left:400;top:140px;opacity:.5"/>
+    <input id="password" type="text" style="border:2px solid groove;position:absolute;left:400px;top:200px;opacity:.5"/>
+</div>
+<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+<script>
+    // 背景图高
+    var oneHeight = 340;
+    // 背景图宽
+    var oneWidth = 658;
+    // 屏幕缩放倍数
+    var screenScale = (window.innerHeight - 2) / oneWidth;
+    //输入框位置
+    $("#name").css("left", window.innerHeight / 2.2);
+    $("#name").css("top", window.innerWidth / 4);
+    $("#password").css("left", window.innerHeight / 2.2);
+    $("#password").css("top", window.innerWidth / 3);
+</script>
+<!--<div id="roomDiv"></div>-->
+<!--<div id="messages"></div>-->
+<script src="threeCardJS/viewPhone.js"></script>
+<script src="threeCardJS/message.js"></script>
+<script src="threeCardJS/controll.js"></script>
+<script src="threeCardJS/music.js"></script>
+<script src="threeCardJS/poker.min.js"></script>
+<script src="threeCardJS/drawCards.js"></script>
+<script src="threeCardJS/fullscreen.js"></script>
+<!--<script src="threeCardJS/facebook.js"></script>-->
+
+<script type="text/javascript">
+    $(function () {
+        //初始化websocket连接
+        wsInit();
+        $.texasMusic.initMusic();
+        var canvas = document.createElement("canvas");
+        texasCanvas = canvas;
+        var ctx = canvas.getContext("2d");
+        canvas.width = window.innerHeight;
+        canvas.height = window.innerWidth;
+        canvas.id = "texasCanvas";
+        $(canvas).appendTo("#canvasDiv");
+        texasContext = canvas.getContext("2d");
+
+        // 游戏主函数
+        var then = Date.now();
+        var main = function () {
+            var now = Date.now();
+            var delta = now - then;
+            //传入时间差
+            update(delta / 1000);
+            render();
+            then = now;
+            // 立即调用主函数
+            requestAnimationFrame(main);
+        };
+        // 画出所有物体
+        var render = function () {
+            //画背景图
+            drawBackground();
+            if (gamebackGroundType == "room" && backGroundLoaded && chipsImage.complete) {
+                //玩家头像
+                drawPlayersPhoto(screenWidth, screenHeight);
+                //玩家信息
+                drawPlayerInfos();
+                //玩家手牌或牌背
+                drawCards();
+                //玩家下注
+                drawBetChips();
+                //玩牌控制按钮
+                drawControllButtons();
+                //奖池
+                drawPotChips();
+                //画倒计时条
+                drawTimeBar();
+            }
+        };
+        // 更新游戏对象的属性
+        var update = function (modifier) {
+            //时间*速度=距离
+            updateTimeBar(modifier);
+        };
+        main();
+    });
+</script>
+<style>
+    @media all and (orientation: landscape) {
+        body {
+
+        }
+    }
+
+    @media all and (orientation: portrait) {
+        body {
+            transform: rotate(90deg);
+            -ms-transform: rotate(90deg); /* Internet Explorer 9 */
+            -moz-transform: rotate(90deg); /* Firefox */
+            -webkit-transform: rotate(90deg); /* Safari & Chrome */
+            -o-transform: rotate(90deg); /* Opera */
+            width: 100%;
+            height: 100%;
+        }
+    }
+</style>
+</body>
+</html>

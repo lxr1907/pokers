@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>现货数据</title>
+    <link rel="stylesheet" type="text/css" href="/fdj/css/my_easyui.css">
+    <link rel="stylesheet" type="text/css" href="/fdj/css/icon.css">
+    <link rel="stylesheet" href="/fdj/css/ui-dialog.css">
+    <style>
+        @CHARSET "UTF-8";
+        /*common.css*/
+        body,button,input,select,textarea{font:12px/1.5 arial,'Hiragino Sans GB','微软雅黑','宋体',tahoma,Srial,helvetica,sans-serif;-webkit-font-smoothing:antialiased;}
+        body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td,img{font-weight:400;outline:0;border:medium none;margin:0;padding:0;list-style:none;}
+    </style>
+    <style type="text/css">
+        #fm
+        {
+            margin: 0;
+            padding: 10px 30px;
+        }
+        .ftitle
+        {
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .fitem
+        {
+            margin-bottom: 5px;
+        }
+        .fitem label
+        {
+            display: inline-block;
+            width: 80px;
+        }
+        #fm input{
+            line-height:0px;
+            border:1px solid #ccc  ;
+        }
+
+    </style>
+    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.js"></script>
+    <script src="/fdj/js/jquery.easyui.min.js"></script>
+    <script src="/fdj/js/easyui-lang-zh_CN.js"></script>
+    <!--<script src="/fdj/js/yuelj.js"></script>-->
+    <script src="/fdj/js/dialog-min.js"></script>
+    <link rel="stylesheet" href="/fdj/css/easyui.css"/>
+
+</head>
+<body>
+<div id="div-content" style="padding:10px;">
+    <div id="tb" style="padding:3px">
+        <span>code:</span>
+        <input id="s-code" style="line-height:26px;border:1px solid #ccc">
+        <span>name:</span>
+        <input id="name" style="line-height:26px;border:1px solid #ccc">
+        <select name="" id="typeSearch" style="height: 29px; margin-left: 34px;">
+            <option value="">全部</option>
+            <option value="1">1.国际</option>
+            <option value="2">2.银行</option>
+            <option value="3">3.天交所</option>
+            <option value="4">4.上交所</option>
+            <option value="0">0.其它</option>
+        </select>
+        <!--<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="updateData()" style="margin-left: 120px">返回所有数据</a>-->
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="onsearchh(this)"style="margin-left: 50px">查找</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="dataDelete(this)" style="margin-left: 200px">已删除</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="dataNotDelete(this)" style="margin-left: 50px">未删除</a>
+    </div>
+    <div id="toolbar">
+        <a href="javascript:void(0)" class="easyui-linkbutton"
+        onclick=" destroyUser()"    iconcls="icon-remove" plain="true">删除</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-add"
+           onclick="addUser()" plain="true">上架</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-edit"
+           onclick="editUser()" plain="true">修改</a>
+    </div>
+    <table id="dg" class="easyui-datagrid" rownumbers="true"></table>
+</div>
+<div id="dlg" class="easyui-dialog" style="width: 400px; height: 380px; padding: 10px 20px;"
+     closed="false" buttons="#dlg-buttons" modal="true" >
+    <div class="ftitle">
+        信息编辑
+    </div>
+    <form id="fm" method="post">
+        <div class="fitem">
+            <label>
+                id
+            </label>
+            <input name="id" class="easyui-validatebox" data-options="required:true,validType:'length[1,320]'" disabled="true" style="line-height: 26px;"/>
+        </div>
+        <div class="fitem">
+            <label>
+                code</label>
+            <input name="code" class="easyui-validatebox" data-options="required:true,validType:'length[1,320]'"disabled="true"style="line-height: 26px;" />
+        </div>
+        <div class="fitem">
+            <label>
+                status</label>
+            <input name="status" class="easyui-validatebox"  data-options="required:true,validType:'length[1,320]'" disabled="true" style="line-height: 26px;"/>
+        </div>
+        <div class="fitem">
+            <label>
+                name</label>
+            <input name="name" class="easyui-validatebox"  data-options="required:true,validType:'length[1,320]'" style="line-height: 26px;" />
+        </div>
+        <div class="fitem">
+            <label>
+                typeid</label>
+            <!--<input name="typeid" class="easyui-validatebox"  data-options="required:true,validType:'length[1,32]'" />-->
+            <select name="" id="select-v" class="easyui-combobox" data-options="editable:false" style="width:100px;">
+                <option value="1">1.国际</option>
+                <option value="2">2.银行</option>
+                <option value="3">3.天交所</option>
+                <option value="4">4.上交所</option>
+                <option value="0">0.其它</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label>
+                rank</label>
+            <input name="rank" class="easyui-validatebox"  data-options="required:true,validType:'length[1,320]'" style="line-height: 26px;" />
+        </div>
+        <input type="hidden" name="action" id="hidtype" />
+        <input type="hidden" name="ID" id="Nameid" />
+    </form>
+</div>
+<div id="dlg-buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="saveUser()" iconcls="icon-save">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#dlg').dialog('close')"
+       iconcls="icon-cancel">取消</a>
+</div>
+<script src="/fdj/js/yuelj.js"></script>
+<script type="text/javascript">
+    //分页参数
+    var pageJson = {
+        pageNum : 1,
+        pageSize : 20,
+        totalCount : 0
+    };
+    //去除边框
+    //$('#dg').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass(cls);
+    //传入后台查询用户的参数
+    var entityJson = {
+    };
+    var postData ={};
+
+    $(function(){
+        //onsearchh();
+        //默认加载未删除数据
+        dataNotDelete();
+        $("#dlg").dialog("close");
+
+    });
+    //查找已经删除的数据
+    function dataDelete(a){
+        $(a).css({'background':'#ac2925','color':'white'}).siblings().css({'background':'white','color':'black'});
+        entityJson.status=0;
+        $('#s-code').val('');
+        $('#name').val('');
+        onsearchh();
+    }
+    //查找已经未删除的数据
+    function dataNotDelete(a){
+        $(a).css({'background':'#ac2925','color':'white'}).siblings().css({'background':'white','color':'black'}) ;
+
+        entityJson.status=1;
+        onsearchh();
+    }
+    //$('#s-code').val()!=''&&(entityJson.code= $('#s-code').val()) ;console.log(entityJson)
+    function onsearchh(a){
+        //传入后台查询用户的参数
+        $(a).siblings().css({'background':'white','color':'black'}) ;
+        $('#s-code').val()!=''&&(entityJson.code= $('#s-code').val()) ;
+        $('#name').val()!=''&&(entityJson.name= $('#name').val()) ;
+        $('#typeSearch option:selected').val()!=''&&(entityJson.typeid = $("#typeSearch option:selected").val()) ;
+        //阐述json化
+        postData.pageJson = JSON.stringify(pageJson);
+        postData.entityJson = JSON.stringify(entityJson);
+        $('#dg').datagrid({
+            loadMsg : '数据加载中,请稍后...',
+            singleSelect : false,
+            nowrap:false,
+            height : 600,
+            pagination : true,
+            pageList : [ 20, 40, 80 ],
+            pageSize : 20,
+            title:'期货数据编辑',
+            columns : [ [{
+                field : 'checkbox',
+                checkbox:true
+            }, {
+                field : 'id',
+                title : 'id',
+                width:80,
+                align : 'center'
+            },{
+                field : 'code',
+                title : 'code',
+                width : 320,
+                align : 'center'
+            },{
+                field : 'name',
+                title : 'name',
+                width : 320,
+                align : 'center',
+                editor:'text'
+            },{
+                field : 'status',
+                title : 'status',
+                width : 230,
+                align : 'center'
+            },{
+                field : 'typeid',
+                title : 'typeid',
+                width : 230,
+                align : 'center'
+            },{
+                field : 'rank',
+                title : '排名',
+                width : 140,
+                align : 'center'
+            }] ] ,
+            //可编辑表格
+            iconCls:'icon-edit',
+            idField:'id',
+        });
+        loadDataGrid();
+
+        var from = 0;
+        var to = 0;
+        //加载分页条
+        function initPagination() {
+            $('#dg').datagrid("getPager").pagination({
+                        total : pageJson.totalCount,
+                        pageSize : pageJson.pageSize,
+                        pageNumber : parseInt(pageJson.pageNum),
+                        onSelectPage : function(pageNum, pageSize) {
+                            $(this).pagination('loading');
+                            pageJson.pageSize = pageSize;
+                            pageJson.pageNum = pageNum;
+                            postData.pageJson = JSON.stringify(pageJson);
+
+                            loadDataGrid();
+                            $(this).pagination('loaded');
+
+                        },
+                displayMsg : '当前显示' + from + "到" + to + '条记录   共'
+                + pageJson.totalCount + ' 条记录'
+            });
+            pageJson.pageNum=1;
+            delete entityJson.code;
+            delete entityJson.name;
+            delete entityJson.typeid;
+            delete entityJson.status;
+        }
+        //加载评论列表
+        function loadDataGrid() {
+            $.ajax({
+                url : "/fdj/selectStockCode.action",
+                data : postData,
+                success : function(returnData) {
+                    if (returnData == null || returnData.list == null) {
+                        $.messager.alert('警告','没有数据啊，赶紧找后端问问');
+                    } else {
+                        $('#dg').datagrid("loadData", {
+                            "rows" : returnData.list
+                        });
+                        $('#dg').datagrid('unselectAll');
+                        //默认选取第一行
+                        /*if (returnData.list.length != 0) {
+                            $('#dg').datagrid("selectRow", 0);
+                        } */
+                        pageJson.totalCount = returnData.page.totalCount;
+                        returnData.page.totalCount == 0 ? from = 0 : from = returnData.page.ifrom + 1;
+                        to = pageJson.pageSize * pageJson.pageNum;
+                        if (to > pageJson.totalCount) {
+                            to = pageJson.totalCount;
+                        }
+                        pageJson.pageSize = returnData.page.pageSize;
+                        pageJson.pageNum = returnData.page.pageNum;
+                        initPagination();
+                    }
+                }
+            });
+        }
+    }
+    //编辑当前选中行
+    function editUser() {
+
+        var row = $("#dg").datagrid("getSelections");
+        if (row.length>1){
+            $.messager.alert('警告','不能进行多行编辑');
+        } else if (row) {
+            $("#dlg").dialog("open").dialog('setTitle', '编辑当前行');
+            $("#fm").form("load", row[0]);
+            //$("#select-v option[value='t"+row.typeid+"']").attr('selected','selected');
+            $('#select-v').combobox('select',''+row[0].typeid+'');
+        }
+    }
+    //删除当前选中行
+    function destroyUser() {
+        var row = $("#dg").datagrid("getSelections");
+        var i = 0;
+        var string = "";
+        for(i;i<row.length;i++){
+            string += row[i].id;
+            if(i < row.length-1){
+                string += ',';
+            }else{
+                break;
+            }
+        }
+        if (row.length== 0) {
+            alert("请选择要删除的行");
+        }
+        if (row.length>0) {
+            $.messager.confirm('Confirm', '确定删除用户?', function(r) {
+                if (r) {
+                    $.ajax({url: "/fdj/operator/deleteStockCode.action",
+                        data: 'ids='+string,
+                        success: function (returnData) {
+                            if (returnData === null || returnData.message === null || returnData.state === 0) {
+                                console.log('无数据')
+                            } else {
+                                $.messager.alert('警告',returnData.message);
+                                entityJson = {
+                                };
+                                postData ={};
+                                dataNotDelete()
+                            }
+                        },
+                    })
+                }
+            });
+        }
+    }
+
+    //上架选中项
+    function addUser() {
+        var row = $("#dg").datagrid("getSelections");
+        var i = 0;
+        var string = "";
+        for(i;i<row.length;i++){
+            string += row[i].id;
+            if(i < row.length-1){
+                string += ',';
+            }else{
+                break;
+            }
+        }
+        //alert(string);
+        //var row = $('#dg').datagrid('getSelected');
+        //alert(row.id);
+        if (row.length== 0) {
+            alert("请选择要上架的行");
+        }
+        if (row.length>0) {
+            $.messager.confirm('Confirm', '确定上架?', function(r) {
+                if (r) {
+                    $.ajax({url: "/fdj/operator/upStockCode.action",
+                        data: 'ids='+string,
+                        success: function (returnData) {
+                            if (returnData === null || returnData.message === null || returnData.state === 0) {
+                                console.log('无数据')
+                            } else {
+                                // alert(returnData.message);
+                                $.messager.alert('警告',returnData.message);
+                                entityJson = {
+                                };
+                                postData ={};
+                                //onsearchh();
+                                dataDelete();
+                            }
+                        },
+                        //error:function(){$.messager.alert('警告','请重新登录')}
+                    })
+                }
+            });
+        }
+    }
+
+    //保存变编辑信息
+    function saveUser() {
+        var entityJson = {
+        };
+        var postData ={};
+        entityJson.id = $("#dg").datagrid("getSelected").id;
+        entityJson.code = $("input[name='code']").val();
+        entityJson.name = $("input[name='name']").val();
+        entityJson.status = $("input[name='status']").val();
+        entityJson.typeid = $('#select-v').combobox('getValue');
+        entityJson.rank = $("input[name='rank']").val();
+        postData.entityJson = JSON.stringify(entityJson);
+        $("#dlg").dialog("close");
+        $.ajax({
+            url: "/fdj/operator/updateStockCode.action",
+            data: postData,
+            success: function (returnData) {
+                if (returnData == null || returnData.message == null) {
+                    $.messager.alert('警告',returnData.message)
+                } else {
+                    $.messager.alert('警告',returnData.message) ;
+                   // postData ={};
+                    entityJson.status = 1;
+                    $('#dg').datagrid('unselectAll');
+                    onsearchh()   ;
+                }
+            },
+            //error: function () {$.messager.alert('警告','响应失败请重新登录')}
+        })
+    }
+</script>
+</body>
+</html>

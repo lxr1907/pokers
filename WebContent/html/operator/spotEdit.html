@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>景点编辑</title>
+<link rel="stylesheet" type="text/css" href="/fdj/css/easyui.css">
+<link rel="stylesheet" type="text/css" href="/fdj/css/icon.css">
+<link rel="stylesheet" href="/fdj/css/ui-dialog.css">
+<link rel="stylesheet" type="text/css" href="/fdj/css/uploadify.css">
+<style type="text/css">
+
+@CHARSET "UTF-8";
+/*common.css*/
+body,button,input,select,textarea{font:12px/1.5 arial,'Hiragino Sans GB','微软雅黑','宋体',tahoma,Srial,helvetica,sans-serif;-webkit-font-smoothing:antialiased;}
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td,img{font-weight:400;outline:0;border:medium none;margin:0;padding:0;list-style:none;}
+
+#win input {
+	width: 300px;
+}
+#infoList a, #newInfoList a{
+    background: transparent url("/fdj/icons/icon_shielded.png") no-repeat scroll 0px 0px;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    right: -7px;
+    top: -8px;
+    width: 20px;
+}
+#basicinfo {width:600px;height:190px;border: 1px solid #e0e0e0;padding:5px;}
+.jsoninfo input{width:100px;border: 1px solid #e0e0e0;}
+#jsoninfo {width:602px;}
+#win{padding:10px;}
+</style>
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.js"></script>
+<script src="/fdj/js/jquery.easyui.min.js"></script>
+<script src="/fdj/js/easyui-lang-zh_CN.js"></script>
+<script src="/fdj/js/yuelj.js"></script>
+<script src="/fdj/js/dialog-min.js"></script>
+<script src="/fdj/js/jquery.uploadify.min.js"></script>
+<script src="/fdj/js/pagejs/spotEdit/spotEdit.js"></script>
+</head>
+<body>
+	<div id="content" style="padding:10px;">
+		<div id="serachdiv">
+			<input id="searchSpotName" class="easyui-textbox" type="text"
+				name="searchSpotName"
+				data-options="buttonText:'景点名称',buttonAlign:'left'" /> <select
+				id="searchState" class="easyui-combobox"
+				data-options="buttonText:'状态',buttonAlign:'left',editable:false"
+				name="searchState" style="width: 200px;">
+				<option value="2">待审核</option>
+				<option value="1">审核通过</option>
+				<option value="3">审核未通过</option>
+				<option value="0">删除</option>
+			</select> <a id="searchButton" href="javascript:void(0);" onclick="searchButtonClick()"
+				class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+		</div>
+		
+		<table id="dg" class="easyui-datagrid"></table>
+		
+		<div id="win" class="easyui-window">
+			<div style="margin-top: 10px;">
+				<input id="name" class="easyui-textbox"
+					data-options="buttonText:'景点名称',buttonAlign:'left'"><br />
+				<span>景点描述：</span><br />
+				<textarea id="basicinfo"></textarea>
+			</div>
+			<div style="margin-top: 10px;">
+				<input id="state" class="easyui-textbox"
+					data-options="buttonText:'状态',buttonAlign:'left',width:80" /><label>2未审核，1有效</label>
+			</div>
+			<div style="margin-top: 10px;">
+				<input id="price" class="easyui-textbox"
+					data-options="buttonText:'价格',buttonAlign:'left'"> <input
+					id="realprice" class="easyui-textbox"
+					data-options="buttonText:'折后价',buttonAlign:'left'">
+			</div>
+			<div style="margin-top: 10px;">
+				<input id="bestmonth" class="easyui-textbox"
+					data-options="buttonText:'最适宜旅行月',buttonAlign:'left'">
+				<!-- <input id="createuser" class="easyui-textbox"
+				data-options="buttonText:'创建人',buttonAlign:'left'"><input
+				id="createtime" class="easyui-textbox"
+				data-options="buttonText:'创建时间',buttonAlign:'left'"> -->
+				<input id="rank" class="easyui-textbox"
+					data-options="buttonText:'排序',buttonAlign:'left'"><span>从1开始，0为本月推荐</span>
+			</div>
+			<div style="margin-top: 10px;">
+				<input id="keyword" class="easyui-textbox"
+					data-options="buttonText:'关键词',buttonAlign:'left'"> <input
+					id="address" class="easyui-textbox"
+					data-options="buttonText:'地址',buttonAlign:'left'">
+			</div>
+			<img id="preViewImg" alt="没有图片" src=""
+				style="width: 300px; height: 200px; margin-top: 10px;">
+			<div>
+				<label id="uploadTxt">上传封面图片</label> <input type="file"
+					name="uploadify" id="uploadify" />
+				<div style="display: none">
+					<input type="text" name="pic" class="easyui-textbox"
+						data-options="buttonText:'',buttonAlign:'left'" id="pic" />
+				</div>
+			</div>
+			<div class="jsoninfo">
+				<input type="text" name="jsoninfo" class="easyui-textbox" data-options="buttonText:'其他信息',buttonAlign:'left',width:'602px'" id="jsoninfo" />
+				<div id="infoList"></div>
+				<div id="newInfoList"></div>
+				<div style="margin:10px 0 20px;">
+					<a id="addinfo" class="btn btn-default btn-xs" href="javascript:void(0);" onclick="addInfo()" style="margin: 10px;">+添加一条其他信息</a></div>
+			</div>
+			<div id="saveSpot">
+				<a href="javascript:void(0)" onclick="saveSpotClick()" class="easyui-linkbutton"
+					data-options="iconCls:'icon-edit'">保存</a>
+			</div>
+			<div style="margin-top: 10px;">
+				<label>以下图片上传后自动保存</label>
+				<input type="file" name="uploadifyMore" id="uploadifyMore" />
+			</div>
+			<div id="some_file_queue"></div>
+			<div id="uploadMoreDiv" style="width: 80%;"></div>
+		</div>
+	</div>
+</body>
+</html>

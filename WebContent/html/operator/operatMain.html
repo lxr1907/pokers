@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>管理系统后台</title>
+<link rel="stylesheet" type="text/css" href="/fdj/css/easyui.css">
+<link rel="stylesheet" type="text/css" href="/fdj/css/icon.css">
+<link rel="stylesheet" type="text/css" href="/fdj/css/color.css">
+<link rel="stylesheet" type="text/css" href="/fdj/css/main.css">
+<style>
+@CHARSET "UTF-8";
+/*common.css*/
+body,button,input,select,textarea{font:12px/1.5 arial,'Hiragino Sans GB','微软雅黑','宋体',tahoma,Srial,helvetica,sans-serif;-webkit-font-smoothing:antialiased;}
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td,img{font-weight:400;outline:0;border:medium none;margin:0;padding:0;list-style:none;}
+#tabs .panel-body {
+
+overflow-y : hidden;
+}
+</style>
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.js"></script>
+<script src="/fdj/js/jquery.easyui.min.js"></script>
+<script src="/fdj/js/yuelj.js"></script>
+<script type="text/javascript">
+	/* $(document).ready(function() {
+		$.yuelj.checkPermission("operator");
+	}); */
+	function addNewTab(obj) {
+		var name = $(obj).html();
+		var url = $(obj).attr("name");
+		if(!$('#tabs').tabs('exists',name)){
+			$('#tabs')
+			.tabs(
+					'add',
+					{
+						title : name,
+						content : ' <iframe scrolling="yes" frameborder="0"  src="'
+								+ url+'?a='+Math.random()
+								+ '" style="width:100%;height:100%;"></iframe>',
+						closable : true
+					});
+		}
+		else{
+			$('#tabs').tabs('select',name);
+		}
+	}
+</script>
+</head>
+<body>
+	<div region="north" border="false"
+		style="text-align: center; width: 100%; height: 72px; background: rgb(102, 102, 102);"
+		title=""
+		class="panel-body panel-body-noheader panel-body-noborder layout-body">
+		<div id="header-inner">
+			<table cellpadding="0" cellspacing="0" style="width: 100%;">
+				<tbody>
+					<tr>
+						<td rowspan="2" style="width: 20px;"></td>
+						<td style="height: 52px;">
+							<div style="color: #fff; font-size: 22px; font-weight: bold;">
+								<a href="javascript:void(0)"
+									style="color: #fff; font-size: 22px; font-weight: bold; text-decoration: none">丰登街管理系统后台</a>
+							</div>
+							<div style="color: #fff">
+								<a href="javascript:void(0)" style="color: #fff; text-decoration: none"></a>
+							</div>
+						</td>
+						<td
+							style="padding-right: 5px; text-align: right; vertical-align: bottom;">
+							<div id="topmenu">
+								<!--<a href="javascript:void(0)" onclick="addNewTab(this)" name="checkInn.html">新客栈审核</a>-->
+								<!--<a href="javascript:void(0)" onclick="addNewTab(this)" name="spotEdit.html">景点编辑</a>-->
+								<!--<a href="javascript:void(0)" onclick="addNewTab(this)" name="travelNotes.html">游记编辑</a>-->
+								<!--<a href="javascript:void(0)" onclick="addNewTab(this)" name="messageTemplate.html">短信模板审核</a>-->
+								<a href="javascript:void(0)" onclick="addNewTab(this)" name="allDate.html">期货数据</a>
+								<a href="javascript:void(0)" onclick="addNewTab(this)" name="deleteComment.html">发帖测试</a>
+								<a href="javascript:void(0)" onclick="addNewTab(this)" name="deleteComment2.0.html">帖子管理</a>
+								<!--<a href="javascript:void(0)" onclick="addNewTab(this)" name="userManagement.html">用户管理</a>-->
+
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div id="tabs" class="easyui-tabs" style="width: 100%; height:900px; border:#fff 1px solid;"></div>
+</body>
+</html>

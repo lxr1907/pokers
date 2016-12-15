@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html ng-app="dataList">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../css/bootstrap.css"/>
+    <style>
+        input{
+            disabled:true;
+        }
+    </style>
+</head>
+<body>
+      <div ng-controller="myCtrl" class="container">
+          <table class="table table-bordered" style="text-align: center">
+              <thead style="text-align: center">
+                <tr style="text-align: center">
+                    <th style="text-align: center">id</th>
+                    <th style="text-align: center">code</th>
+                    <th style="text-align: center">name</th>
+                    <th style="text-align: center">status</th>
+                    <th style="text-align: center">typeid</th>
+                    <th style="text-align: center">operate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="obj in array">
+                    <td>{{obj.id}}</td>
+                    <td><input type="text" value="{{obj.code}}" disabled/></td>
+                    <td><input type="text" value="{{obj.name}}" disabled/></td>
+                    <td><input type="text" value="{{obj.status}}"disabled style="width: 80px"/></td>
+                    <td>
+                        <select disabled="true">
+                            <option value="{{obj.typeid}}">{{obj.typeid}}</option>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button id="edit" class=" btn btn-success btn-sm" >编辑</button>
+                        <button id="submit" class=" btn btn-danger btn-sm">提交</button>
+                    </td>
+                </tr>
+              </tbody>
+          </table>
+      </div>
+      <script src="../../js/jquery-1.11.3.min.js"></script>
+      <!--<script src="../../js/angular.js"></script>-->
+      <script>
+          angular.module('dataList',[])
+                  .controller('myCtrl', function ($scope,$http) {
+                      $scope.array=[];
+                      $scope.loadMore =function(){
+                          $http.get('/fdj/selectStockCode.action')
+                                  .success(function (data) {
+                                      console.log(data)
+                                      $scope.array=data.list;
+                                      console.log($scope.array)
+                                  })
+                      };
+                      $scope.loadMore();
+                  })
+          $('#edit').click(function(){
+              $('input').css('disabled','false');
+              $('select').css('disable','false');
+          })
+      </script>
+</body>
+</html>
