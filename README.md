@@ -3,7 +3,7 @@ texas holdem poker and three card poker games.
 
 A poker client useing html,jquery,websocket,canvas. 
 
-Only contains login,regist,three basic play rooms,chips rank. 
+Only contains login,regist,three basic play rooms,rank by chips. 
 
 You can see this project at the website below. 
 
