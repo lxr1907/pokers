@@ -5,7 +5,7 @@ A poker client useing html,jquery,websocket,canvas.
 
 Only contains login,regist,three basic play rooms,chips rank. 
 
-You can see this project at this website below. 
+You can see this project at the website below. 
 
 http://120.26.217.116:8080/texas/texasIndex.html. 
 
