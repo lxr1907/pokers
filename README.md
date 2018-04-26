@@ -16,3 +16,5 @@ http://120.26.217.116:8080/texas/texasIndex.html.
 包含登陆注册功能，筹码排行榜，德州扑克仅有3种下注额度的房间。 
 
 参考效果地址http://120.26.217.116:8080/texas/texasIndex.html 
+
+服务端代码地址https://github.com/lxr1907/texas.git
